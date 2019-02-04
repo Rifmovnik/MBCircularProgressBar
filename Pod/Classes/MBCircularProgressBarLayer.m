@@ -41,10 +41,6 @@
 
 #pragma mark - Drawing
 
-//-(void)setValue:(CGFloat)value{
-//    [self drawProgressBar:<#(CGSize)#> context:<#(CGContextRef)#>]
-//}
-
 - (void) drawInContext:(CGContextRef) context{
     [super drawInContext:context];
 
@@ -105,7 +101,7 @@
 }
 
 - (void)drawProgressBar:(CGRect)rect context:(CGContextRef)c{
-    if(self.progressLineWidth <= 0){
+    if(self.progressLineWidth <= 0 || self.maxValue == 0.){
         return;
     }
     
@@ -118,11 +114,13 @@
     } else {
         radius = radius - self.emptyLineWidth - self.progressLineWidth/2.f;
     }
+	
+	CGFloat value = MIN(self.value, self.maxValue);
     
     CGMutablePathRef arc = CGPathCreateMutable();
     CGPathAddArc(arc, NULL,
                  center.x, center.y, radius,
-                 (self.progressAngle/100.f)*M_PI-((-self.progressRotationAngle/100.f)*2.f+0.5)*M_PI-(2.f*M_PI)*(self.progressAngle/100.f)*(100.f-100.f*self.value/self.maxValue)/100.f,
+                 (self.progressAngle/100.f)*M_PI-((-self.progressRotationAngle/100.f)*2.f+0.5)*M_PI-(2.f*M_PI)*(self.progressAngle/100.f)*(100.f-100.f*value/self.maxValue)/100.f,
                  -(self.progressAngle/100.f)*M_PI-((-self.progressRotationAngle/100.f)*2.f+0.5)*M_PI,
                  YES);
     
